@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IronPulse</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #8b5cf6;
+      --secondary: #6d28d9;
+      --bg: #0B0F19;
+      --glass: rgba(17, 17, 17, 0.7);
+      --text-muted: #9ca3af;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: white;
+    }
+
+    section {
+      min-height: 100vh;
+      padding: 120px 8%;
+      display: none;
+    }
+
+    section.active {
+      display: block;
+    }
+
+    .glass {
+      background: var(--glass);
+      backdrop-filter: blur(16px);
+      border-radius: 20px;
+      padding: 40px;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      padding: 20px 8%;
+      display: flex;
+      justify-content: space-between;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(16px);
+      z-index: 1000;
+    }
+
+    nav a {
+      margin-left: 30px;
+      color: var(--text-muted);
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    nav a:hover {
+      color: var(--primary);
+    }
+
+    /* HERO */
+    .hero {
+      text-align: center;
+      margin-bottom: 80px;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      margin-top: 20px;
+    }
+
+    /* STACK CARDS */
+    .stack-container {
+      padding-bottom: 20vh;
+    }
+
+    .stack-card {
+      position: sticky;
+      margin-bottom: 15vh;
+      top: calc(120px + (var(--index)*14px));
+      background: rgba(17, 17, 17, 0.95);
+    }
+
+    .stack-card h3 {
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+
+    .stack-card p {
+      color: var(--text-muted);
+    }
+
+    /* TOOLS */
+    .tools-nav {
+      display: flex;
+      gap: 15px;
+      margin: 40px 0;
+      flex-wrap: wrap;
+    }
+
+    .tools-nav button {
+      padding: 10px 18px;
+      border-radius: 12px;
+      background: var(--glass);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      color: white;
+      cursor: pointer;
+    }
+
+    .tools-nav button.active {
+      background: var(--primary);
+    }
+
+    .tool-panel {
+      display: none;
+    }
+
+    .tool-panel.active {
+      display: block;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 10px;
+      background: #1a1a1a;
+      color: white;
+    }
+
+    button.primary {
+      background: var(--primary);
+      border: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      color: white;
+    }
+
+    .export-btn {
+      margin-top: 40px;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 12px;
+      background: var(--secondary);
+      cursor: pointer;
+      color: white;
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+
+    .modal {
+      max-width: 750px;
+      width: 95%;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 30px;
+    }
+
+    .close-btn {
+      text-align: right;
+      font-size: 14px;
+      margin-bottom: 15px;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .close-btn:hover {
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav>
+    <div><strong>IRONPULSE</strong></div>
+    <div>
+      <a onclick="Maps('page-home')">Home</a>
+      <a onclick="goToTools()">Tools</a>
+      <a onclick="toggleAuth()" id="nav-auth-btn">Login</a>
+    </div>
+  </nav>
+
+  <!-- HOME -->
+  <section id="page-home" class="active">
+    <div class="hero">
+      <h1>The 10 System Directives</h1>
+      <p>Cardio, Hypertrophy, and Strength — unified into one elite system.</p>
+    </div>
+
+    <div class="stack-container">
+      <div class="glass stack-card" style="--index:0">
+        <h3>1. Cardio Baseline</h3>
+        <p>150 min weekly minimum.</p>
+      </div>
+      <div class="glass stack-card" style="--index:1">
+        <h3>2. Optimal Conditioning</h3>
+        <p>300+ min weekly.</p>
+      </div>
+      <div class="glass stack-card" style="--index:2">
+        <h3>3. Zone 2 Mastery</h3>
+        <p>Build aerobic efficiency.</p>
+      </div>
+      <div class="glass stack-card" style="--index:3">
+        <h3>4. Hypertrophy Threshold</h3>
+        <p>10 sets minimum weekly.</p>
+      </div>
+      <div class="glass stack-card" style="--index:4">
+        <h3>5. Optimal Volume</h3>
+        <p>15–20 sets weekly.</p>
+      </div>
+      <div class="glass stack-card" style="--index:5">
+        <h3>6. Reps In Reserve</h3>
+        <p>Train 1–3 RIR.</p>
+      </div>
+      <div class="glass stack-card" style="--index:6">
+        <h3>7. Strength Frequency</h3>
+        <p>2 sessions minimum.</p>
+      </div>
+      <div class="glass stack-card" style="--index:7">
+        <h3>8. Advanced Strength</h3>
+        <p>3–4 heavy sessions.</p>
+      </div>
+      <div class="glass stack-card" style="--index:8">
+        <h3>9. Heavy Loads</h3>
+        <p>75–90% 1RM.</p>
+      </div>
+      <div class="glass stack-card" style="--index:9">
+        <h3>10. Integration</h3>
+        <p>Cardio + Strength + Hypertrophy.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOGIN -->
+  <section id="page-login">
+    <div class="glass" style="max-width:400px;margin:auto;">
+      <h2>Login / Register</h2>
+      <input id="authEmail" type="email" placeholder="Email">
+      <input id="authPassword" type="password" placeholder="Password">
+
+      <div style="display:flex;gap:15px;margin-top:20px;">
+        <button class="primary" onclick="handleLogin()">Sign In</button>
+        <button class="primary" onclick="handleRegister()">Register</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOOLS -->
+  <section id="page-tools">
+    <h1>Diagnostic Tools</h1>
+
+    <div class="tools-nav">
+      <button onclick="switchTool(0)" class="active">BMI</button>
+      <button onclick="switchTool(1)">TDEE</button>
+      <button onclick="switchTool(2)">Workout Generator</button>
+      <button onclick="switchTool(3)">Macro</button>
+      <button onclick="switchTool(4)">RNG</button>
+    </div>
+
+    <div class="tool-panel active glass">
+      <h3>BMI Scanner</h3>
+      <input id="bmiWeight" placeholder="Mass (kg)">
+      <input id="bmiHeight" placeholder="Height (cm)">
+      <button class="primary" onclick="calculateBMI()">Scan</button>
+    </div>
+
+    <div class="tool-panel glass">
+      <h3>Total Daily Energy Expenditure (TDEE) Analyzer</h3>
+      <select id="gender">
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+      <input id="age" placeholder="Age">
+      <input id="weight" placeholder="Mass (kg)">
+      <input id="height" placeholder="Height (cm)">
+      <select id="activity">
+        <option value="1.2">Sedentary</option>
+        <option value="1.55">Moderate</option>
+        <option value="1.9">Athlete</option>
+      </select>
+      <button class="primary" onclick="calculateTDEE()">Analyze</button>
+    </div>
+
+    <div class="tool-panel glass">
+      <h3>A.I. Workout Generator</h3>
+      <input id="days" placeholder="Days per week (3-6)">
+      <select id="goal">
+        <option>Hypertrophy</option>
+        <option>Strength</option>
+        <option>Fat loss</option>
+      </select>
+      <button class="primary" onclick="generateProtocol()">Generate</button>
+    </div>
+
+    <div class="tool-panel glass">
+      <h3>Macro Matrix</h3>
+      <input id="macroWeight" placeholder="Mass (kg)">
+      <select id="macroGoal">
+        <option value="standard">Recomp</option>
+        <option value="gain">Muscle Gain</option>
+        <option value="cut">Fat Loss</option>
+      </select>
+      <button class="primary" onclick="calculateMacros()">Calculate</button>
+    </div>
+
+    <div class="tool-panel glass">
+      <h3>RNG Sequence</h3>
+      <textarea id="jsonInput" placeholder="Paste JSON array"></textarea>
+      <button class="primary" onclick="injectJSON()">Inject</button>
+      <input id="rngCount" placeholder="Count">
+      <button class="primary" onclick="executeRNG()">Generate</button>
+    </div>
+
+    <button class="export-btn" onclick="exportReport()">Export Performance Report</button>
+  </section>
+
+  <div class="modal-overlay" id="modal">
+    <div class="glass modal">
+      <div class="close-btn" onclick="closeModal()">Close</div>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <script>
+
+
+    let latestBMI = "";
+    let latestTDEE = "";
+    let latestMacros = "";
+    let latestWorkout = "";
+
+    let bmiInputs = "";
+    let tdeeInputs = "";
+    let macroInputs = "";
+    let workoutInputs = "";
+
+
+    function calculateBMI() {
+
+      let w = parseFloat(document.getElementById("bmiWeight").value);
+      let h = parseFloat(document.getElementById("bmiHeight").value) / 100;
+
+      if (isNaN(w) || isNaN(h) || h <= 0) {
+        showModal("Please enter valid weight and height.");
+        return;
+      }
+
+      let bmi = w / (h * h);
+
+      let category = "";
+      let color = "white";
+
+      if (bmi < 18.5) {
+        category = "Underweight";
+        color = "#22d3ee";
+      } else if (bmi < 25) {
+        category = "Optimal";
+        color = "white";
+      } else if (bmi < 30) {
+        category = "Overweight";
+        color = "orange";
+      } else {
+        category = "Obese";
+        color = "#f43f5e";
+      }
+
+      bmiInputs = `
+Weight: ${w} kg
+Height: ${h * 100} cm
+`;
+
+      latestBMI = `BMI: ${bmi.toFixed(1)} (${category})`;
+
+      showModal(`
+    <h2 style="color:${color}">BMI: ${bmi.toFixed(1)}</h2>
+    Status: ${category}
+  `);
+    }
+    function calculateTDEE() {
+
+      let g = document.getElementById("gender").value;
+      let a = parseInt(document.getElementById("age").value);
+      let w = parseFloat(document.getElementById("weight").value);
+      let h = parseFloat(document.getElementById("height").value);
+      let activity = parseFloat(document.getElementById("activity").value);
+
+      if (isNaN(a) || isNaN(w) || isNaN(h)) {
+        showModal("Please fill all fields correctly.");
+        return;
+      }
+
+      let bmr;
+
+      if (g === "male") {
+        bmr = (10 * w) + (6.25 * h) - (5 * a) + 5;
+      } else {
+        bmr = (10 * w) + (6.25 * h) - (5 * a) - 161;
+      }
+
+      let tdee = Math.round(bmr * activity);
+
+      tdeeInputs = `
+Gender: ${g}
+Age: ${a}
+Weight: ${w} kg
+Height: ${h} cm
+Activity Multiplier: ${activity}
+`;
+
+      latestTDEE = `
+Maintenance: ${tdee} kcal
+Fat Loss: ${tdee - 500} kcal
+Muscle Gain: ${tdee + 300} kcal
+`;
+
+      showModal(`
+    <h2>TDEE Analysis</h2>
+    Maintenance: ${tdee} kcal<br><br>
+    Fat Loss Target: ${tdee - 500} kcal<br>
+    Muscle Gain Target: ${tdee + 300} kcal
+  `);
+    }
+    function calculateMacros() {
+
+      let weight = parseFloat(document.getElementById("macroWeight").value);
+      let goal = document.getElementById("macroGoal").value;
+
+      if (isNaN(weight)) {
+        showModal("Please enter valid weight.");
+        return;
+      }
+
+      let proteinMultiplier = 1.8;
+      if (goal === "gain") proteinMultiplier = 2.2;
+      if (goal === "cut") proteinMultiplier = 2.0;
+
+      let protein = Math.round(weight * proteinMultiplier);
+      let fats = Math.round(weight * 0.8);
+      let carbs = Math.round(weight * 3.5);
+
+      let calories = (protein * 4) + (carbs * 4) + (fats * 9);
+
+      let sugar = Math.round((calories * 0.10) / 4);
+      let satFat = Math.round((calories * 0.10) / 9);
+
+      macroInputs = `
+Weight: ${weight} kg
+Goal: ${goal}
+`;
+
+      latestMacros = `
+Calories: ${calories}
+Protein: ${protein}g
+Carbs: ${carbs}g
+Fats: ${fats}g
+Sugar < ${sugar}g
+Sat Fat < ${satFat}g
+`;
+
+
+
+      showModal(`
+    <h2>Macro Breakdown</h2>
+    Calories: ${calories} kcal<br><br>
+    Protein: ${protein} g<br>
+    Carbs: ${carbs} g<br>
+    Fats: ${fats} g<br><br>
+    <hr>
+    Max Sugar: < ${sugar} g<br>
+    Max Saturated Fat: < ${satFat} g
+  `);
+    }
+    function Maps(id) {
+      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    function goToTools() {
+      if (window.currentUser) { Maps('page-tools'); }
+      else { Maps('page-login'); }
+    }
+
+    function toggleAuth() {
+      if (window.currentUser) { logoutUser(); }
+      else { Maps('page-login'); }
+    }
+
+    function handleLogin() { loginUser(authEmail.value, authPassword.value); }
+    function handleRegister() { registerUser(authEmail.value, authPassword.value); }
+
+    function switchTool(i) {
+      document.querySelectorAll('.tool-panel').forEach((p, index) => p.classList.toggle('active', index === i));
+      document.querySelectorAll('.tools-nav button').forEach((b, index) => b.classList.toggle('active', index === i));
+    }
+
+    function showModal(html) {
+      document.getElementById("modalContent").innerHTML = html;
+      document.getElementById("modal").style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("modal").style.display = "none";
+    }
+
+    /* Structured Workout Generator */
+    function generateProtocol() {
+      const days = parseInt(daysInput = document.getElementById("days").value);
+      const goal = document.getElementById("goal").value;
+
+      if (isNaN(days) || days < 3 || days > 6) {
+        showModal("Enter 3–6 training days.");
+        return;
+      }
+
+      const muscleGroups = ["Chest", "Back", "Legs", "Core", "Calves", "Biceps", "Triceps", "Neck"];
+      const exercises = {
+        Chest: ["Bench Press", "Incline DB Press", "Chest Fly"],
+        Back: ["Barbell Row", "Pull Ups", "Lat Pulldown"],
+        Legs: ["Squats", "RDL", "Leg Press"],
+        Core: ["Plank", "Cable Crunch"],
+        Calves: ["Standing Calf Raise", "Seated Calf Raise"],
+        Biceps: ["Barbell Curl", "Hammer Curl"],
+        Triceps: ["Dips", "Pushdown"],
+        Neck: ["Neck Flexion", "Neck Extension"]
+      };
+
+      let html = `<h2>${goal} Training Plan</h2><br>`;
+
+      for (let d = 0; d < days; d++) {
+        html += `<div style="margin-bottom:20px;padding:20px;border:1px solid rgba(255,255,255,0.1);border-radius:12px;">`;
+        html += `<h3 style="color:#8b5cf6;">Day ${d + 1}</h3>`;
+
+        muscleGroups.slice(d % 8).slice(0, Math.ceil(8 / days)).forEach(muscle => {
+          exercises[muscle].slice(0, 2).forEach(ex => {
+            let sets = goal === "Strength" ? 5 : goal === "Fat loss" ? 3 : 4;
+            let reps = goal === "Strength" ? "3–6" : goal === "Fat loss" ? "12–15" : "8–12";
+            html += `<div><strong>${muscle}</strong> — ${ex}<br>
+        <span style="color:#9ca3af;">${sets} sets × ${reps}</span></div><br>`;
+          });
+        });
+
+        if (goal === "Fat loss") {
+          html += `<div style="color:#f87171;">Finisher: 10 min HIIT</div>`;
+        }
+
+        html += `</div>`;
+      }
+      latestWorkout = html.replace(/<[^>]*>?/gm, '');
+
+      workoutInputs = `
+Days Per Week: ${days}
+Goal: ${goal}
+`;
+
+      latestWorkout = html.replace(/<[^>]*>?/gm, '');
+
+      showModal(html);
+    }
+    function exportReport() {
+
+      if (!latestBMI && !latestTDEE && !latestMacros && !latestWorkout) {
+        alert("Generate some results first!");
+        return;
+      }
+
+      const report = `
+IRONPULSE PERFORMANCE REPORT
+=============================
+
+Date: ${new Date().toLocaleString()}
+User: ${window.currentUser ? window.currentUser.email : "Guest"}
+
+-------------------------------------
+BMI INPUT DATA
+-------------------------------------
+${bmiInputs || "Not Generated"}
+
+RESULT:
+${latestBMI || "Not Generated"}
+
+-------------------------------------
+TDEE INPUT DATA
+-------------------------------------
+${tdeeInputs || "Not Generated"}
+
+RESULT:
+${latestTDEE || "Not Generated"}
+
+-------------------------------------
+MACRO INPUT DATA
+-------------------------------------
+${macroInputs || "Not Generated"}
+
+RESULT:
+${latestMacros || "Not Generated"}
+
+-------------------------------------
+WORKOUT INPUT DATA
+-------------------------------------
+${workoutInputs || "Not Generated"}
+
+PLAN:
+${latestWorkout || "Not Generated"}
+
+-------------------------------------
+Generated by IronPulse
+`;
+
+      const blob = new Blob([report], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "IronPulse_Report.txt";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+
+      URL.revokeObjectURL(url);
+    }
+
+  </script>
+
+  <script type="module" src="firebase-config.js"></script>
+
+</body>
+
+</html>
